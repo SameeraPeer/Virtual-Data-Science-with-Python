@@ -1,48 +1,55 @@
-# Week 1: Data Acquisition, Cleaning and Exploratory Data Analysis
+# Virtual Data Science Internship with Python
 
-Virtual Data Science internship (Python) - Week 1 task.
+Weekly projects from my virtual data science internship, built with Python.
+Each week lives in its own folder with its own code, data, figures and README.
 
-**Dataset:** Titanic passenger data (public CSV on GitHub, 891 rows).
-**Goal:** acquire a public dataset, clean it with Pandas, explore it with summary
-statistics and visualizations, and document the process.
+**Author:** Sameera P
 
-## Project structure
+## Projects
+
+| Week | Topic | Dataset | Folder | Status |
+|---|---|---|---|---|
+| 1 | Data Acquisition, Cleaning, and Exploratory Data Analysis | Titanic passengers (891 rows) | [week1_project](week1_project/) | Complete |
+| 2 | Advanced Data Visualization and Storytelling | Breast Cancer Wisconsin, Diagnostic (569 samples) | [week2_project](week2_project/) | Complete |
+| 3 | To be added | | week3_project | Coming soon |
+| 4 | To be added | | week4_project | Coming soon |
+| 5 | To be added | | week5_project | Coming soon |
+
+## Highlights
+
+### Week 1: Data cleaning and EDA
+- Downloaded a public dataset, then cleaned it with Pandas: imputed 177 missing ages, handled a column that was 77% empty, and flagged 116 fare outliers.
+- Five visualizations explore survival by sex, class, age and fare.
+- Finding: 74.2% of women survived compared with 18.9% of men.
+
+### Week 2: Data storytelling
+- Seven charts tell one story for a non-technical audience: what separates benign from malignant samples, and how much can a few simple clues tell us?
+- Finding: two measurements place 74% of samples in zones where 99.3% share the same diagnosis, leaving a grey zone of 26% that needs more evidence.
+
+## Repository structure
 
 ```
-week1_titanic_eda.py     main script (acquire -> clean -> explore -> plot)
-requirements.txt         Python dependencies
-data/raw/                untouched downloaded data
-data/processed/          cleaned dataset
-figures/                 5 saved visualizations
-reports/eda_summary.txt  numbers printed by the script (quote these in the report)
+.
+├── README.md              this overview
+├── week1_project/         Week 1: cleaning and EDA
+├── week2_project/         Week 2: visualization and storytelling
+└── ...                    later weeks are added as they are completed
 ```
 
-## How to run
+Each week folder contains the main Python script, a `requirements.txt`, the data, the figures and its own README.
+
+## Tools
+
+Python, Pandas, NumPy, Matplotlib, Seaborn, scikit-learn
+
+## How to run a project
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate        # Windows: .venv\Scripts\activate
+cd week1_project                 # or week2_project, and so on
 pip install -r requirements.txt
-python week1_titanic_eda.py
+python <main_script>.py          # the script name is listed in each week's README
 ```
 
-If the download fails, save the CSV manually as `data/raw/titanic_raw.csv` and run again.
+## Note
 
-## Cleaning decisions (short version)
-
-| Issue | Action | Why |
-|---|---|---|
-| Age missing | Median by Pclass and Sex | Age differs by class and sex; keeps rows |
-| Cabin mostly missing | Dropped, kept `HasCabin` flag | Too sparse to impute reliably |
-| Embarked missing (2 rows) | Mode | Negligible effect |
-| Name | Extracted `Title`, then dropped | Title is informative, raw name is not |
-| Fare skew and outliers | Flagged (IQR), added `LogFare`, rows kept | Fares are real, not errors |
-| Data types | Categorical for Sex, Embarked, Title, Pclass | Correct types, less memory |
-
-## Visualizations
-
-1. Missing-values heatmap (raw data)
-2. Age distribution by survival
-3. Survival rate by class and sex
-4. Fare by class (box plot, log scale)
-5. Correlation heatmap
+These are learning projects. The Week 2 dataset is medical, and nothing in this repository is medical advice.
