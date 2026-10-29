@@ -1,0 +1,60 @@
+=== DATA CHECK ===
+Samples and columns: 569 rows, 30 measurements + diagnosis
+Missing values: 0
+Duplicate rows: 0
+Benign: 357 (62.7%)   Malignant: 212 (37.3%)
+
+=== MEDIANS BY DIAGNOSIS ===
+diagnosis             Benign  Malignant
+mean radius           12.200     17.325
+mean texture          17.390     21.460
+mean area            458.400    932.000
+mean concave points    0.023      0.086
+
+=== SEPARATION POWER (AUC) TOP 12 ===
+worst perimeter          0.975  (higher in malignant)
+worst radius             0.970  (higher in malignant)
+worst area               0.970  (higher in malignant)
+worst concave points     0.967  (higher in malignant)
+mean concave points      0.964  (higher in malignant)
+mean perimeter           0.947  (higher in malignant)
+mean area                0.938  (higher in malignant)
+mean concavity           0.938  (higher in malignant)
+mean radius              0.938  (higher in malignant)
+area error               0.926  (higher in malignant)
+worst concavity          0.921  (higher in malignant)
+perimeter error          0.876  (higher in malignant)
+Weakest feature: texture error 0.512
+mean texture: 0.776
+
+=== CORRELATIONS ===
+Pairs of the 30 measurements with |r| > 0.9: 21 of 435
+mean radius vs mean perimeter: 0.998
+mean radius vs mean area: 0.987
+mean concavity vs mean concave points: 0.921
+mean texture vs mean radius: 0.324
+
+=== TWO-CLUE ZONES (illustrative thresholds, not validated) ===
+Thresholds: benign zone worst radius < 16.0 and worst concave points < 0.11; malignant zone worst radius > 17.5 and worst concave points > 0.15
+Clear benign zone: 286 samples, 3 malignant (1.0%)
+Clear malignant zone: 135 samples, 135 malignant (100.0%)
+Grey zone: 148 samples (26.0%)
+Grey zone malignant share: 50.0%
+Samples in the two clear zones: 421 (74.0%)
+
+=== RISK LADDER (worst radius bands) ===
+Under 12  n= 86  malignant=  0  share=  0.0%
+12 to 14  n=142  malignant=  4  share=  2.8%
+14 to 16  n=113  malignant= 17  share= 15.0%
+16 to 18  n= 73  malignant= 39  share= 53.4%
+18 to 20  n= 34  malignant= 31  share= 91.2%
+Over 20   n=121  malignant=121  share=100.0%
+
+=== PCA ===
+Variance explained: PC1 44.3%, PC2 19.0%, together 63.2%
+PC1 mean: benign -2.21, malignant 3.71
+
+=== HOW MANY CLUES ARE ENOUGH? (5-fold cross-validated accuracy, logistic regression) ===
+2 clues (worst radius, worst concave points)     accuracy 94.4% (+/- 2.3)
+5 strongest single clues                         accuracy 94.2% (+/- 1.5)
+All 30 measurements                              accuracy 97.4% (+/- 1.7)
