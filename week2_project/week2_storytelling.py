@@ -20,13 +20,23 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 from matplotlib.patches import Ellipse, Rectangle
-from sklearn.datasets import load_breast_cancer
-from sklearn.decomposition import PCA
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import roc_auc_score
-from sklearn.model_selection import StratifiedKFold, cross_val_score
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import StandardScaler
+
+# scikit-learn is only used to load the dataset and for the cross-validation step.
+# On some locked-down Windows laptops, an "Application Control" policy blocks scipy
+# (which scikit-learn needs). In that case the script carries on without it.
+try:
+    from sklearn.datasets import load_breast_cancer
+    from sklearn.linear_model import LogisticRegression
+    from sklearn.model_selection import StratifiedKFold, cross_val_score
+    from sklearn.pipeline import make_pipeline
+    from sklearn.preprocessing import StandardScaler
+    HAVE_SKLEARN = True
+except Exception as err:  # ImportError, or OSError when a DLL is blocked
+    HAVE_SKLEARN = False
+    print(f"Note: scikit-learn could not be loaded ({type(err).__name__}).")
+    print("Continuing with the saved CSV file and NumPy. Only the cross-validation step will be skipped.\n")
+
+os.chdir(os.path.dirname(os.path.abspath(__file__)))   # work from the script's own folder
 
 for folder in ("data/raw", "data/processed", "figures", "reports"):
     os.makedirs(folder, exist_ok=True)
@@ -62,12 +72,19 @@ def save(fig, name):
     plt.close(fig)
 
 # ---------------------------------------------------------------- 1. data
-raw = load_breast_cancer(as_frame=True)
-df = raw.frame.copy()
-# in scikit-learn, target 0 = malignant and 1 = benign
-df["diagnosis"] = df["target"].map({0: "Malignant", 1: "Benign"})
-df = df.drop(columns="target")
-df.to_csv("data/raw/breast_cancer_wisconsin.csv", index=False)
+RAW_CSV = "data/raw/breast_cancer_wisconsin.csv"
+if HAVE_SKLEARN:
+    raw = load_breast_cancer(as_frame=True)
+    df = raw.frame.copy()
+    # in scikit-learn, target 0 = malignant and 1 = benign
+    df["diagnosis"] = df["target"].map({0: "Malignant", 1: "Benign"})
+    df = df.drop(columns="target")
+    df.to_csv(RAW_CSV, index=False)
+elif os.path.exists(RAW_CSV):
+    df = pd.read_csv(RAW_CSV)          # same data, saved earlier by the project
+else:
+    raise SystemExit(f"scikit-learn is unavailable and {RAW_CSV} was not found. "
+                     "Keep the data/raw folder from the project, or fix the scikit-learn install.")
 
 features = [c for c in df.columns if c != "diagnosis"]
 df["is_malignant"] = (df["diagnosis"] == "Malignant").astype(int)
@@ -122,7 +139,15 @@ footer(fig)
 save(fig, "fig2_distributions.png")
 
 # ---------------------------------------------------------------- FIG 3
-auc = {f: roc_auc_score(df["is_malignant"], df[f]) for f in features}
+def auc_score(y, x):
+    """Chance that a random malignant sample scores higher than a random benign one (ties count half)."""
+    ranks = pd.Series(x).rank(method="average").to_numpy()
+    y = np.asarray(y)
+    n_pos = y.sum()
+    n_neg = len(y) - n_pos
+    return (ranks[y == 1].sum() - n_pos * (n_pos + 1) / 2) / (n_pos * n_neg)
+
+auc = {f: auc_score(df["is_malignant"], df[f]) for f in features}
 sep = pd.Series({f: max(a, 1 - a) for f, a in auc.items()}).sort_values(ascending=False)
 direction = {f: ("higher in malignant" if auc[f] > 0.5 else "lower in malignant") for f in features}
 log("\n=== SEPARATION POWER (AUC) TOP 12 ===")
@@ -257,10 +282,14 @@ footer(fig)
 save(fig, "fig6_risk_ladder.png")
 
 # ---------------------------------------------------------------- FIG 7
-X = StandardScaler().fit_transform(df[features])
-pca = PCA(n_components=2, random_state=42)
-Z = pca.fit_transform(X)
-ev = pca.explained_variance_ratio_ * 100
+X = df[features].to_numpy(dtype=float)
+X = (X - X.mean(axis=0)) / X.std(axis=0)             # put all 30 measurements on one scale
+U, S, Vt = np.linalg.svd(X, full_matrices=False)     # principal component analysis via SVD
+signs = np.sign(Vt[np.arange(Vt.shape[0]), np.abs(Vt).argmax(axis=1)])
+Vt = Vt * signs[:, None]                             # fixed sign convention, so charts do not flip
+Z = X @ Vt[:2].T
+variance = S ** 2 / (len(X) - 1)
+ev = (variance / variance.sum())[:2] * 100
 df["pc1"], df["pc2"] = Z[:, 0], Z[:, 1]
 log("\n=== PCA ===")
 log(f"Variance explained: PC1 {ev[0]:.1f}%, PC2 {ev[1]:.1f}%, together {ev.sum():.1f}%")
@@ -293,16 +322,20 @@ save(fig, "fig7_big_picture.png")
 
 # ---------------------------------------------------------------- how many clues are enough?
 log("\n=== HOW MANY CLUES ARE ENOUGH? (5-fold cross-validated accuracy, logistic regression) ===")
-cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
-sets = {
-    "2 clues (worst radius, worst concave points)": ["worst radius", "worst concave points"],
-    "5 strongest single clues": list(sep.head(5).index),
-    "All 30 measurements": features,
-}
-for name, cols in sets.items():
-    model = make_pipeline(StandardScaler(), LogisticRegression(max_iter=1000))
-    sc = cross_val_score(model, df[cols], df["is_malignant"], cv=cv, scoring="accuracy")
-    log(f"{name:<48s} accuracy {sc.mean() * 100:.1f}% (+/- {sc.std() * 100:.1f})")
+if HAVE_SKLEARN:
+    cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+    sets = {
+        "2 clues (worst radius, worst concave points)": ["worst radius", "worst concave points"],
+        "5 strongest single clues": list(sep.head(5).index),
+        "All 30 measurements": features,
+    }
+    for name, cols in sets.items():
+        model = make_pipeline(StandardScaler(), LogisticRegression(max_iter=1000))
+        sc = cross_val_score(model, df[cols], df["is_malignant"], cv=cv, scoring="accuracy")
+        log(f"{name:<48s} accuracy {sc.mean() * 100:.1f}% (+/- {sc.std() * 100:.1f})")
+else:
+    log("Skipped: this step needs scikit-learn, which could not be loaded on this computer.")
+    log("For reference, the report's values were 94.4%, 94.2% and 97.4% for the three sets above.")
 
 df.drop(columns=["pc1", "pc2"]).to_csv("data/processed/breast_cancer_prepared.csv", index=False)
 with open("reports/key_numbers.txt", "w") as fh:
