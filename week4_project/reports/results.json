@@ -1,0 +1,284 @@
+{
+  "n_samples": 1797,
+  "n_features": 64,
+  "n_classes": 10,
+  "missing_values": 0,
+  "duplicate_rows": 0,
+  "pixel_min": 0.0,
+  "pixel_max": 16.0,
+  "dtype": "float64",
+  "constant_pixels": [
+    "pix_0",
+    "pix_32",
+    "pix_39"
+  ],
+  "class_counts": {
+    "0": 178,
+    "1": 182,
+    "2": 177,
+    "3": 183,
+    "4": 181,
+    "5": 182,
+    "6": 181,
+    "7": 179,
+    "8": 174,
+    "9": 180
+  },
+  "class_min": 174,
+  "class_max": 183,
+  "n_train": 1437,
+  "n_test": 360,
+  "test_rows_duplicated_in_train": 0,
+  "best_C": 1.0,
+  "best_tree_params": {
+    "max_depth": 15,
+    "min_samples_leaf": 1
+  },
+  "model_table": [
+    {
+      "model": "Majority-class baseline",
+      "train_acc": 0.1016,
+      "cv_acc": 0.1009,
+      "cv_sd": 0.0002,
+      "test_acc": 0.1,
+      "macro_precision": 0.01,
+      "macro_recall": 0.1,
+      "macro_f1": 0.0182,
+      "macro_auc": 0.5
+    },
+    {
+      "model": "Logistic regression (tuned)",
+      "train_acc": 0.9993,
+      "cv_acc": 0.968,
+      "cv_sd": 0.0074,
+      "test_acc": 0.9722,
+      "macro_precision": 0.9721,
+      "macro_recall": 0.9719,
+      "macro_f1": 0.9719,
+      "macro_auc": 0.9991
+    },
+    {
+      "model": "Decision tree (unpruned)",
+      "train_acc": 1.0,
+      "cv_acc": 0.8448,
+      "cv_sd": 0.0221,
+      "test_acc": 0.825,
+      "macro_precision": 0.8236,
+      "macro_recall": 0.8242,
+      "macro_f1": 0.823,
+      "macro_auc": 0.9024
+    },
+    {
+      "model": "Decision tree (tuned)",
+      "train_acc": 1.0,
+      "cv_acc": 0.8448,
+      "cv_sd": 0.0221,
+      "test_acc": 0.825,
+      "macro_precision": 0.8236,
+      "macro_recall": 0.8242,
+      "macro_f1": 0.823,
+      "macro_auc": 0.9024
+    },
+    {
+      "model": "Random forest (300 trees)",
+      "train_acc": 1.0,
+      "cv_acc": 0.9749,
+      "cv_sd": 0.0078,
+      "test_acc": 0.9694,
+      "macro_precision": 0.97,
+      "macro_recall": 0.9691,
+      "macro_f1": 0.9689,
+      "macro_auc": 0.9992
+    }
+  ],
+  "gs_lr_cv_scores": {
+    "0.001": 0.8991,
+    "0.01": 0.9436,
+    "0.1": 0.9631,
+    "1.0": 0.968,
+    "10.0": 0.9666,
+    "100.0": 0.9631
+  },
+  "lr_errors": 10,
+  "tree_errors": 63,
+  "rf_errors": 11,
+  "lr_per_class": {
+    "0": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 36.0
+    },
+    "1": {
+      "precision": 0.8889,
+      "recall": 0.8889,
+      "f1-score": 0.8889,
+      "support": 36.0
+    },
+    "2": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 35.0
+    },
+    "3": {
+      "precision": 0.9737,
+      "recall": 1.0,
+      "f1-score": 0.9867,
+      "support": 37.0
+    },
+    "4": {
+      "precision": 0.973,
+      "recall": 1.0,
+      "f1-score": 0.9863,
+      "support": 36.0
+    },
+    "5": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 37.0
+    },
+    "6": {
+      "precision": 1.0,
+      "recall": 0.9722,
+      "f1-score": 0.9859,
+      "support": 36.0
+    },
+    "7": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 36.0
+    },
+    "8": {
+      "precision": 0.8857,
+      "recall": 0.8857,
+      "f1-score": 0.8857,
+      "support": 35.0
+    },
+    "9": {
+      "precision": 1.0,
+      "recall": 0.9722,
+      "f1-score": 0.9859,
+      "support": 36.0
+    }
+  },
+  "lr_top_confusions": [
+    {
+      "true": 8,
+      "pred": 1,
+      "count": 4
+    },
+    {
+      "true": 1,
+      "pred": 8,
+      "count": 2
+    },
+    {
+      "true": 1,
+      "pred": 3,
+      "count": 1
+    },
+    {
+      "true": 1,
+      "pred": 4,
+      "count": 1
+    },
+    {
+      "true": 6,
+      "pred": 8,
+      "count": 1
+    },
+    {
+      "true": 9,
+      "pred": 8,
+      "count": 1
+    }
+  ],
+  "lr_acc_ci95": [
+    0.9555555555555556,
+    0.9888888888888889
+  ],
+  "lr_auc_per_class": {
+    "0": 1.0,
+    "1": 0.9947,
+    "2": 1.0,
+    "3": 1.0,
+    "4": 0.9997,
+    "5": 1.0,
+    "6": 0.9997,
+    "7": 1.0,
+    "8": 0.9967,
+    "9": 0.9999
+  },
+  "val_curve": {
+    "depth": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      8,
+      10,
+      12,
+      15,
+      20
+    ],
+    "train": [
+      0.1992,
+      0.3213,
+      0.4849,
+      0.5964,
+      0.7121,
+      0.8206,
+      0.9386,
+      0.9871,
+      0.999,
+      1.0,
+      1.0
+    ],
+    "cv": [
+      0.1983,
+      0.318,
+      0.4649,
+      0.5651,
+      0.6764,
+      0.7599,
+      0.8379,
+      0.8435,
+      0.8358,
+      0.8448,
+      0.8448
+    ]
+  },
+  "learning_curves": {
+    "Logistic regression": {
+      "final_train": 0.9998,
+      "final_cv": 0.9694,
+      "cv_at_smallest": 0.9026,
+      "smallest_n": 114
+    },
+    "Decision tree (unpruned)": {
+      "final_train": 1.0,
+      "final_cv": 0.8435,
+      "cv_at_smallest": 0.6541,
+      "smallest_n": 114
+    }
+  },
+  "split_stability": {
+    "Logistic regression": {
+      "mean": 0.9717,
+      "sd": 0.0055,
+      "min": 0.9639,
+      "max": 0.9806
+    },
+    "Random forest": {
+      "mean": 0.9786,
+      "sd": 0.0064,
+      "min": 0.9667,
+      "max": 0.9861
+    }
+  }
+}

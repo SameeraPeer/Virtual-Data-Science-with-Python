@@ -1,0 +1,17 @@
+WEEK 4 RESULTS SUMMARY
+============================================================
+Samples 1797, features 64, classes 10
+Missing values 0, duplicate rows 0, constant pixels ['pix_0', 'pix_32', 'pix_39']
+Train 1437, test 360
+
+                      model  train_acc  cv_acc  cv_sd  test_acc  macro_precision  macro_recall  macro_f1  macro_auc
+    Majority-class baseline     0.1016  0.1009 0.0002    0.1000           0.0100        0.1000    0.0182     0.5000
+Logistic regression (tuned)     0.9993  0.9680 0.0074    0.9722           0.9721        0.9719    0.9719     0.9991
+   Decision tree (unpruned)     1.0000  0.8448 0.0221    0.8250           0.8236        0.8242    0.8230     0.9024
+      Decision tree (tuned)     1.0000  0.8448 0.0221    0.8250           0.8236        0.8242    0.8230     0.9024
+  Random forest (300 trees)     1.0000  0.9749 0.0078    0.9694           0.9700        0.9691    0.9689     0.9992
+
+Best C = 1.0; best tree = {'max_depth': 15, 'min_samples_leaf': 1}
+LR test accuracy 95% bootstrap CI: 0.9556 to 0.9889
+Top confusions: [{'true': 8, 'pred': 1, 'count': 4}, {'true': 1, 'pred': 8, 'count': 2}, {'true': 1, 'pred': 3, 'count': 1}, {'true': 1, 'pred': 4, 'count': 1}, {'true': 6, 'pred': 8, 'count': 1}, {'true': 9, 'pred': 8, 'count': 1}]
+Split stability: {'Logistic regression': {'mean': 0.9717, 'sd': 0.0055, 'min': 0.9639, 'max': 0.9806}, 'Random forest': {'mean': 0.9786, 'sd': 0.0064, 'min': 0.9667, 'max': 0.9861}}
