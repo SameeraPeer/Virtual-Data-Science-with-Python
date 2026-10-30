@@ -1,0 +1,14 @@
+WEEK 3 - HYPOTHESIS TESTING SUMMARY (alpha = 0.05)
+============================================================
+Data: 178 wines, 13 measurements, missing = 0, duplicates = 0, cultivars = {'A': 59, 'B': 71, 'C': 48}
+
+H1 Alcohol A vs B: A=13.74, B=12.28; Welch t(127.8)=16.71, p=<1e-15; diff=1.47 CI[1.29,1.64]; g=2.89; MWU p=<1e-15; perm p=0.0001
+H2 Flavanoids: Levene p=2.2e-05; ANOVA F(2,175)=233.9, p=<1e-15; Welch F=549.1, p=<1e-15; KW H=130.5, p=<1e-15; eta2=0.73, omega2=0.72
+    B - A: diff=-0.90, GH p=<1e-15, Tukey p=<1e-15
+    C - A: diff=-2.20, GH p=3.8e-14, Tukey p=<1e-15
+    C - B: diff=-1.30, GH p=<1e-15, Tukey p=<1e-15
+H3 Colour vs cultivar: chi2(2)=95.3, p=<1e-15, V=0.73, min expected=24.0, % high={'A': 73, 'B': 6, 'C': 88}
+H4 Flavanoids~phenols: r=0.86 CI[0.82,0.90], p=<1e-15; rho=0.88; within: A=0.80, B=0.77, C=0.24
+H5 Ash A vs C (exploratory): Welch t(105.0)=0.46, p=0.643; diff=0.019 CI[-0.060,0.097]; g=0.09; min detectable d=0.55
+
+Holm-corrected family H1-H4: H1: p_holm=<1e-15 reject=True; H2: p_holm=<1e-15 reject=True; H3: p_holm=<1e-15 reject=True; H4: p_holm=<1e-15 reject=True
